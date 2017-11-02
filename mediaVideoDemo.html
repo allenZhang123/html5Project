@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>videoDemo</title>
+<script>
+window.onload=function(){
+	var oPlayBtn=document.getElementById("play");
+	var oVideo=document.getElementById("video");
+	oPlayBtn.onclick=function(){
+		oVideo.play();
+	};
+};	
+</script>
+</head>
+<body>
+	<video controls="controls"  loop="loop" poster="images/videoDemo/1.jpg" id="video">
+		<source src="video/videoDemo/iceage4.mp4" >
+		<source src="video/videoDemo/iceage4.webm" >
+	</video>
+	<input type="button" value="播放" id="play">
+	<audio src="audio/videoDemo/fcml.mp3" controls="controls"></audio>
+</body>
+</html>

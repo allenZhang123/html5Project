@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasWords</title>
+<style>
+	#canvas{ background-color: #ccc; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+	// oCanvas.beginPath();
+	// oCanvas.font='30px 微软雅黑';
+	// oCanvas.textBaseline='top';
+	// oCanvas.textAlign='start';
+	// oCanvas.fillText('后盾网',0,0);
+
+	// oCanvas.beginPath();
+	// oCanvas.moveTo(200,100);
+	// oCanvas.lineTo(200,250);
+	// oCanvas.stroke();
+
+	// oCanvas.beginPath();
+	// oCanvas.font='20px 微软雅黑';
+	// oCanvas.textAlign='start';
+	// //文字开始（left）和目标对齐
+	// oCanvas.fillText('后盾',200,100);
+
+	// oCanvas.beginPath();
+	// oCanvas.font='20px 微软雅黑';
+	// oCanvas.textAlign='end';
+	// //文字结束（right）和目标对齐
+	// oCanvas.fillText('后盾',200,120);
+
+	// oCanvas.beginPath();
+	// oCanvas.font='20px 微软雅黑';
+	// oCanvas.textAlign='center';
+	// //文字中间和目标对齐
+	// oCanvas.fillText('后盾',200,140);	
+
+	// oCanvas.beginPath();
+	// oCanvas.font='20px 微软雅黑';
+	// oCanvas.textAlign='left';
+	// //文字左边和目标对齐
+	// oCanvas.fillText('后盾',200,160);	
+
+	// oCanvas.beginPath();
+	// oCanvas.font='20px 微软雅黑';
+	// oCanvas.textAlign='right';
+	// //文字右边和文字对齐
+	// oCanvas.fillText('后盾',200,180);
+
+	oCanvas.beginPath();
+	oCanvas.moveTo(200,100);
+	oCanvas.lineTo(450,100);
+	oCanvas.stroke();
+
+	oCanvas.beginPath();
+	oCanvas.font='20px 微软雅黑';
+	oCanvas.textBaseline='alphabetic';
+	//文字底边和目标对齐
+	oCanvas.fillText('alphabetic',200,100);
+
+	oCanvas.beginPath();
+	oCanvas.font='20px 微软雅黑';
+	oCanvas.textBaseline='top';
+	//文字上边和目标对齐
+	oCanvas.fillText('top',240,100);	
+
+	oCanvas.beginPath();
+	oCanvas.font='20px 微软雅黑';
+	oCanvas.textBaseline='hanging';
+	//文字上边和目标对齐
+	oCanvas.fillText('后盾',280,100);	
+
+	oCanvas.beginPath();
+	oCanvas.font='20px 微软雅黑';
+	oCanvas.textBaseline='middle';
+	//文字中心和目标对齐
+	oCanvas.fillText('后盾',320,100);	
+
+	oCanvas.beginPath();
+	oCanvas.font='20px 微软雅黑';
+	oCanvas.textBaseline='bottom';
+	//文字底边和目标对齐
+	oCanvas.fillText('后盾',360,100);
+
+	oCanvas.beginPath();
+	oCanvas.font='20px 微软雅黑';
+	oCanvas.textBaseline='bottom';
+	oCanvas.textAlign='center';
+	var w=oCanvas.measureText('后盾网').width;
+	oCanvas.strokeText('后盾',(500-w)/2,100);	
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+</body>
+</html>

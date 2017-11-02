@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasArc</title>
+<style>
+#canvas{ background-color: #ccc; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext("2d");
+	oCanvas.beginPath();
+	oCanvas.moveTo(250,300);	
+	oCanvas.lineTo(250,250);
+	oCanvas.lineWidth=5;
+	oCanvas.strokeStyle="orange";
+	oCanvas.stroke();
+	//线条跟随鼠标摇动
+	oCan.onmousemove=function(ev){
+		var mx=ev.layerX;
+		var my=ev.layerY;
+		var startx=250;
+		var starty=300;
+		var angle=Math.atan2((my-starty),(mx-startx));
+		// var angle=Math.atan((my-starty)/(mx-startx));//无法判断每个象限方位
+		//必须先传入y值，再传入x值
+		//atan2()返回角度值，可以判断正负值
+		//atan(x) 返回的是角度值
+		//tan(x) x必须是数值
+		oCanvas.clearRect(0,0,500,500);
+		oCanvas.beginPath();
+		oCanvas.moveTo(startx,starty);
+		oCanvas.lineTo(startx+50*Math.cos(angle),starty+50*Math.sin(angle));
+		oCanvas.stroke();
+	};
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+</body>
+</html>

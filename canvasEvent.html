@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasEvent</title>
+<style>
+	#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext('2d');
+	//第一个盒子
+	oCanvas.beginPath();
+	oCanvas.arc(100,100,50,0,2*Math.PI);
+	oCanvas.fill();	
+
+	//第二个盒子
+	oCanvas.beginPath();
+	oCanvas.arc(200,200,50,0,2*Math.PI);
+	oCanvas.fill();
+
+
+	oCan.onclick=function(ev){
+		var mx=ev.layerX;
+		var my=ev.layerY;
+	//创建对象  第一个盒子
+	var event1=new addEvent(oCanvas,"arc",'100,100,50,0,'+Math.PI*2,function(){
+			alert(1);
+		});
+		event1.add(mx,my);
+	//创建对象 第二个盒子
+	var event2=new addEvent(oCanvas,"arc",'200,200,50,0,'+Math.PI*2,function(){
+			alert(1);
+		});
+		event2.add(mx,my);
+	};
+};
+//构造函数
+function addEvent(oCanvas,type,data,callback){
+	this.oCanvas=oCanvas;
+	this.type=type;
+	this.data=data;
+	this.callback=callback;
+
+	this.redraw();
+};
+
+addEvent.prototype={
+	redraw:function(){
+		if (this.type=="arc") {
+			this.oCanvas.beginPath();
+			var arr=this.data.split(",");
+			this.oCanvas.arc(arr[0],arr[1],arr[2],arr[3],arr[4]);
+			this.oCanvas.fill();
+		}
+	},
+	add:function(mx,my){
+		if (this.oCanvas.isPointInPath(mx,my)) {
+			this.callback();
+		}
+	}
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+</body>
+</html>

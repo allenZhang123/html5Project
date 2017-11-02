@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasPath</title>
+<style>
+	#canvas{ background-color: #ccc }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext("2d");
+	// oCanvas.strokeStyle="red";
+	// oCanvas.rect(0,0,100,100);
+	// oCanvas.stroke();
+	// oCanvas.fill();
+	// drawRect(0,0,100,100);
+	// function drawRect(x,y,w,h){
+	// 	oCanvas.rect(x,y,w,h);
+	// 	oCanvas.stroke();
+	// }
+
+	//绘制线条
+	// oCanvas.moveTo(0,0);
+	// oCanvas.lineTo(100,100);
+	// oCanvas.stroke();
+	// oCanvas.beginPath();//绘制路径开端
+	// oCanvas.lineTo(100,200);
+	// oCanvas.lineTo(300,350);
+	// oCanvas.lineTo(100,400);
+	// oCanvas.closePath();
+	// //结束路径，首尾相连闭合路径成闭合区域
+	// oCanvas.stroke();
+
+	//画布
+	oCan.onmousedown=function(ev){
+		var mx=ev.layerX;
+		var my=ev.layerY;
+		// x=ev.clientX;
+		// y=ev.clientY;//鼠标到有定位父级距离
+		// document.title=x+" "+y;
+		oCanvas.moveTo(mx,my);
+		oCan.onmousemove=function(ev){
+			var endx=ev.layerX;
+			var endy=ev.layerY; 
+			//获取鼠标在画布中的坐标
+			oCanvas.lineTo(endx,endy);
+			oCanvas.strokeStyle="orange";
+			oCanvas.stroke();
+		};
+		oCan.onmouseup=function(){
+			oCan.onmousemove=null;
+			oCan.onmouseup=null;
+		};
+	};
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500px" height="500px"> 
+	请您升级浏览器
+</canvas>
+</body>
+</html>

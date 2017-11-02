@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script>
+window.onload=function(){
+	//获取页面引入svg的enbed元素
+	var one=document.getElementById("one");
+	//获取svg对象
+	var svg=one.getSVGDocument();
+	//获取svg文档对象
+	var svgDoc=svg.documentElement;
+	//获取svg文档对象节点
+	var po=svgDoc.getElementsByTagName("polygon")[0];
+	var angle=0;
+	setInterval(function(){
+		angle+=0.1;
+		var str=po.getAttribute("points");
+		var newStr="";
+		var arr=str.split(",");//转数组
+		for (var i = 0; i < arr.length; i++) {
+			var num=parseInt(arr[i]);
+			num+=5*Math.random()*Math.sin(angle);
+			//限制其不移动出范围
+			newStr+=num+",";
+		}
+		newStr=newStr.subString(0,newStr.length-1);
+		//去掉最后一位逗号
+		po.setAttribute("points",newStr);
+	},50);
+};
+</script>
+</head>
+<body>
+<embed src="svg/SVG.svg" width="600" height="600" type="image/svg+xml" pluginspage="http://www.adobe.com/svg/viewer/install" id="one"/>
+
+<!-- <object data="rect.svg" width="300" height="300" type="" codebase="http://www.adobe.com/svg/viewer/install"></object> -->
+<!-- 
+<iframe src="svg/SVG.svg" frameborder="1" width="300" height="300"></iframe> -->
+
+<!-- <svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<circle cx="100" cy="50" r="40" stroke="black" strock-width="2" fill="red"/>
+</svg>
+<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<polygon points="100,10,40,180,190,60,10,60,160,180" style="fill:lime;stroke:purple;stroke-width:5;fill-rule:evenodd;"/>
+</svg>
+<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<line x1="0"y1="0" x2="300" y2="300" style="stroke:rgb(99,99,99);stroke-width:2"/>
+</svg>
+ -->
+</body>
+</html>

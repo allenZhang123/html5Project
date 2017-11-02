@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style>
+#canvas{ background-color: #ccc; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext("2d");
+	//保存圆点
+	var originX=200;
+	var originY=200;
+	var radius=100;//半径
+	var oAudio=document.getElementById("audio");
+	//音频播放时间变化时,调整音频频率
+	oAudio.ontimeupdate=function(){
+		if (oAudio.currentTime>=0.1) {
+			//只播放音频的前0.1秒
+			oAudio.pause();
+		}
+	};
+	drawClock();
+	//定时器
+	setInterval(function(){
+		drawClock();
+	},1000);
+	function drawClock(){
+		//每次播放都从0开始
+		oAudio.currentTime=0;
+		oAudio.play();
+		//清空画布
+		oCanvas.clearRect(0,0,500,500);
+	/****************表盘*****************/
+		//渐变色：
+		var colorObj=oCanvas.createRadialGradient(originX,originY,1,originX,originY,100);
+		//增加渐变色
+		colorObj.addColorStop(0,"#efefef");
+		colorObj.addColorStop(1,"#cecece");
+		//画圆
+		oCanvas.beginPath();
+		//修饰
+		oCanvas.shadowColor="#888";
+		oCanvas.shadowOffsetX=1;
+		oCanvas.shadowOffsetY=1;
+		oCanvas.shadowBlur=5;
+		oCanvas.strokeStyle=colorObj;
+		oCanvas.lineWidth=5;
+		oCanvas.fillStyle=colorObj;
+		oCanvas.arc(originX,originY,radius,0,Math.PI*2);
+		oCanvas.stroke();
+		oCanvas.fill();
+	/****************刻度*****************/
+	//360度，一共60格，360/60=6
+		drawMark();
+	/**************让表针动起来***********/
+		//360/12=30度  小时
+		//360/60=6度
+		var oDate=new Date();
+		var hour=0;
+		var minute=oDate.getMinutes()*6-90;
+		var second=oDate.getSeconds()*6-90;
+		//系统时间24小时制，转换成12小时
+		if (oDate.getHours()>12) {
+			hour=(oDate.getHours()-12)*30+oDate.getMinutes()*6/12-90;
+			//时钟一格角度+分针转过的角度/12
+		}
+		else{
+			hour=oDate.getHours()*30+oDate.getMinutes()*6/12-90;
+		}
+	/**************时、分、秒针***********/
+	//半径、角度、宽度、颜色
+		//时
+		drawPointer(70,minute,4,"#555");
+		//分
+		drawPointer(50,hour,5,"#333");
+		//秒
+		drawPointer(80,second,2,"#888");
+		//中间小圆
+		oCanvas.beginPath();
+		oCanvas.fillStyle="#888";
+		oCanvas.arc(originX,originY,4,0,2*Math.PI);
+		oCanvas.fill();
+	};
+	//画刻度
+	function drawMark(){
+		for (var i = 0; i < 60; i++) {
+			var angle=i*6*Math.PI/180;
+			//将角度转成弧度
+			var radiusN=radius-4;
+			var lw=2;
+			//整点表针变粗，变长
+			if (i%5==0) {
+				radiusN=radius-7;
+				//秒针边长
+				lw=4;
+				//边宽
+			}
+			oCanvas.beginPath();
+			oCanvas.shadowColor=null;
+			oCanvas.shadowOffsetX=0;
+			oCanvas.shadowOffsetY=0;
+			oCanvas.shadowBlur=0;
+			oCanvas.strokeStyle="#555";
+			oCanvas.lineWidth=lw;
+			oCanvas.moveTo(originX+radius*Math.cos(angle),originY+radius*Math.sin(angle));
+			oCanvas.lineTo(originX+(radiusN)*Math.cos(angle),originY+(radiusN)*Math.sin(angle));
+			oCanvas.stroke();
+		}
+	};
+	//画表针
+	function drawPointer(radius,angle,width,color){
+		oCanvas.beginPath();
+		oCanvas.strokeStyle=color;
+		oCanvas.lineCap="round";
+		oCanvas.lineWidth=width;
+		oCanvas.moveTo(originX,originY);
+		oCanvas.lineTo(originX+radius*Math.cos(angle*Math.PI/180),originY+radius*Math.sin(angle*Math.PI/180));
+		oCanvas.stroke();
+	};
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+<audio src="audio/canvasClock/1.wav" id="audio"></audio>
+</body>
+</html>

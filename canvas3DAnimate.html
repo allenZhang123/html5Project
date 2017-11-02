@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvas3DAnimate</title>
+<style>
+	#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+
+/***************创建运动色块数据*****************/
+	var arr=[];
+	for(var i=0;i<8;i++){
+		//随机色
+		var colorNum1="rgb("+parseInt(255*Math.random())+","+parseInt(255*Math.random())+","+parseInt(255*Math.random())+")";
+		var arcObj={
+			r:20+5*Math.random(),color1:colorNum1,x_3d:-200+(i+1)*35,y_3d:-100+200*Math.random(),z_3d:i*10,z_speed:10+10*Math.random()
+			//r 半径  color1色块随机色:  x_3d x轴初始坐标:  y_3d: y轴初始坐标 z_3d:初始坐标  z_speed:控制z_3d增幅
+			// r:10+5*Math.random(),x_3d:-200+i*10,y_3d:-100,z_3d:i*10,z_speed:10
+		};
+		arr.push(arcObj);
+	}
+	//焦距
+	var focusLen=300;
+	oCanvas.translate(250,250);
+	setInterval(function(){
+		oCanvas.clearRect(-250,-250,500,500);
+		var newArr=arr.sort(function(a,b){
+			return a.z_3d<b.z_3d;
+			//从大到小排序数组，z_3d越大应该离视觉越远，由于第8个最后绘制，其图像压在前面图像上，造成离视觉近的效果，所以应该将数组按照z_3d重新从大到小排序，z_3d越大，越先绘制，离视觉越远
+		});
+		//到达设定值，速度取反
+		for (var i = 0; i < arr.length; i++) {
+
+			arr[i].z_3d+=arr[i].z_speed;
+
+			if (arr[i].z_3d>600||arr[i].z_3d<=-100) {
+				arr[i].z_speed*=-1;
+			}
+			/***************3D运动公式*****************/
+			//3d比例=焦点/(焦点+z轴坐标)
+			//z_3d越大，3d比例越小，离视觉越远。z_3d越小，3d比例越大，离视觉越近
+			var scals=focusLen/(focusLen+arr[i].z_3d);
+			//x轴坐标=x轴坐标*3d比例
+			var x=arr[i].x_3d*scals;
+			//y轴坐标=y轴坐标*3d比例
+			var y=arr[i].y_3d*scals;
+			oCanvas.save();
+			//色块运动到x,y
+			oCanvas.translate(x,y);
+			//色块缩放比例为3d比例
+			oCanvas.scale(scals,scals);
+			oCanvas.beginPath();
+			//放射性渐变
+			var colorObj=oCanvas.createRadialGradient(3,3,0,0,0,15);
+			colorObj.addColorStop(0,"#cbc0f3");
+			// colorObj.addColorStop(1,"#06198b");
+			//随机颜色
+			colorObj.addColorStop(1,arr[i].color1);
+			oCanvas.fillStyle=colorObj;
+			oCanvas.arc(0,0,arr[i].r,0,2*Math.PI);
+			oCanvas.fill();
+			oCanvas.restore();
+			}
+	},50);
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+</body>
+</html>

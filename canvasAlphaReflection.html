@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasAlphaReflection</title>
+<style>
+#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+	var oImg=document.getElementById("img");
+	//引入图片
+	oCanvas.drawImage(oImg,0,0,200,240);
+	var imgData=oCanvas.getImageData(0,0,200,240);
+	//创建与图片像素值相同的新图像，用于防止倒影图像
+	var newimgData=oCanvas.createImageData(200,240);
+	var timer=null;
+	var num=0;
+	//动态展开
+	timer=setInterval(function(){
+		if (num>=imgData.height) {
+			clearInterval(timer);
+		}
+		else{
+			//创建倒影图像
+			inverted(imgData,newimgData,num);
+			//将新建倒影图像放入画布
+			oCanvas.putImageData(newimgData,0,240);
+			num+=2;
+			//使用定时器，使height逐渐增加
+		}
+	},30);
+	//源图像对象，创建图像对象，透明度比例
+	function inverted(imgData,newimgData,num){
+		//i是y坐标，j是x坐标，img.height-i是倒影y坐标，x坐标不变。
+		for (var i = 0; i < num; i++) {
+			//num代替imgData.height
+			for (var j = 0; j < imgData.width; j++) {
+				newimgData.data[i*(imgData.width*4)+j*4+0]=imgData.data[(imgData.height-i)*(imgData.width*4)+j*4+0];
+				newimgData.data[i*(imgData.width*4)+j*4+1]=imgData.data[(imgData.height-i)*(imgData.width*4)+j*4+1];
+				newimgData.data[i*(imgData.width*4)+j*4+2]=imgData.data[(imgData.height-i)*(imgData.width*4)+j*4+2];
+				newimgData.data[i*(imgData.width*4)+j*4+3]=imgData.data[(imgData.height-i)*(imgData.width*4)+j*4+3]-i*0.8;
+				//-i*0.8 透明度逐渐减少
+			}
+		}
+	};
+	// for (var i = 0; i < imgData.height; i++) {
+	// 	for (var j = 0; j < imgData.width; j++) {
+	// 		//抽色，只改变某一色值，其它不变
+	// 		imgData.data[i*imgData.width*4+j*4+0]=255;
+	// 		// imgData.data[i*imgData.width*4+j*4+1]=0;
+	// 		// imgData.data[i*imgData.width*4+j*4+2]=0;
+	// 		// imgData.data[i*imgData.width*4+j*4+3]=255;
+	// 	}
+	// }
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+<img src="images/canvasAlpha/1.jpg" hidden="hidden" id="img">
+</body>
+</html>

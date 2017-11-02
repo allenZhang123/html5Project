@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasGame</title>
+<style>
+	body{ padding:0;margin:0;overflow: -hidden; }
+	#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	oCan.width=document.documentElement.clientWidth;
+	oCan.height=document.documentElement.clientHeight;
+	var oCanvas=oCan.getContext("2d");
+	//寻路算法  aSTAR
+	var arr=[];
+	var addNum=8;
+	/****************创建种子文件**************/
+	ceate();
+	function ceate(){
+		arr=[];
+		for (var i = 0; i <addNum; i++) {
+			var rectObj={
+				width:50,height:50,color:"rgb("+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+")"
+			};
+			arr.push(rectObj);
+		}
+	};
+	/****************复制双倍的种子文件**************/
+	//若直接赋值，会产生两组地址相同的数组，点击一个另一个也会改变
+	var newArr=[];
+	function sum(){
+		newArr=[];
+		for (var j = 0; j <2; j++) {
+			for (var i = 0; i < arr.length; i++) {
+				var newObj={};
+				for (var att in arr[i]) {
+					//将数组中的数据循环赋给JSON
+					//产生另个地址不同的数组
+					newObj[att]=arr[i][att];
+				}
+				newArr.push(newObj);
+			}
+		}
+	};
+	sum();
+
+	/*******************绘制色块******************/
+	var colsNum=4;
+	draw(colsNum);
+	function draw(colsNum){
+		var rows=0;
+		var cols=0;
+		for (var i = 0; i < newArr.length; i++) {
+			//控制行和列
+			if (i%colsNum==0) {
+				rows++;
+				cols=0;
+			}
+			// oCanvas.clearRect(0,0,oCan.width,oCan.height);
+			oCanvas.beginPath();
+			oCanvas.fillStyle=newArr[i].color;
+			//在画布居中
+			var center=(oCan.width-(newArr[i].width+5)*colsNum)/2
+			oCanvas.rect(center+cols*(newArr[i].width+5),rows*(newArr[i].height+5),newArr[i].width,newArr[i].height);
+			oCanvas.fill();
+			//将获得的x,y轴坐标存入相对应JSON中！！！
+			newArr[i].x=center+cols*(newArr[i].width+5);
+			newArr[i].y=rows*(newArr[i].height+5);
+			cols++;
+		}
+	};
+	/*******************点击相同色块隐藏******************/
+	var arrClick=[];//存储点击元素数组
+	var NumArr=[];//存储元素脚标
+	var num=0;
+	oCan.onclick=function(ev){
+		var mx=ev.layerX;
+		var my=ev.layerY;
+		//绘制色块
+		newDraw();
+		function newDraw(){
+			oCanvas.clearRect(0,0,oCan.width,oCan.height);
+			for (var i = 0; i < newArr.length; i++) {
+				var event=new addEvent(oCanvas,"rect",newArr[i].x+";"+newArr[i].y+";"+newArr[i].width+";"+newArr[i].height+";"+newArr[i].color,function(){
+					//若第二个脚标等于第一个，则直接返回，不再将第二个i存入数组，避免一个盒子点击两次
+					if (i==NumArr[0]) {
+						return;
+					}
+					//存储点击元素
+					arrClick.push(newArr[i]);
+					//存储点击元素脚标
+					NumArr.push(i);
+					if (arrClick.length==2) {
+						//判断条件：颜色相同，脚标不同
+						if (arrClick[0].color==arrClick[1].color&&NumArr[0]!=NumArr[1]) {
+							//相同两块元素全透明
+							arrClick[0].color="rgba(0,0,0,0)";
+							arrClick[1].color="rgba(0,0,0,0)";
+							//更新颜色数据以后要立刻进行绘制
+							newDraw();
+							//每点击完成一次加一
+							num++;
+							//如果num等于总数目一半，则表示全部已经点击完成
+							if (num==newArr.length/2){
+								num=0;
+								addNum*=2;
+								ceate();
+								sum();
+								colsNum+=2;
+								//控制色块级数
+								if (colsNum>10) {
+									//色块达到级数以后，弹出结束标志
+									oCanvas.beginPath();
+									oCanvas.fillStyle="orange";
+									oCanvas.arc((oCan.width-50)/2,200,50,0,Math.PI*2);
+									oCanvas.fill();
+
+									oCanvas.beginPath();
+									oCanvas.fillStyle="#222";
+									oCanvas.textBaseline="center";
+									oCanvas.textAlign="center";
+									oCanvas.font="bold 10px 微软雅黑";
+									var w=oCanvas.measureText("GameOver").width;
+									oCanvas.fillText("Game Over",(oCan.width-w)/2,200);
+									return;
+								}
+								else{
+									draw(colsNum);
+								}
+							}
+						}
+						//清空数组，存储数组和数据数组最大长度为2
+						arrClick.length=0;
+						NumArr=[];
+					}
+				});
+				//调用对象方法，执行回调函授
+				event.add(mx,my);
+			}
+		};
+	};	
+};
+//构造函数
+function addEvent(oCanvas,type,data,callback){
+	this.oCanvas=oCanvas;
+	this.type=type;
+	this.data=data;
+	this.callback=callback;
+	this.redraw();
+};
+//对象添加方法
+addEvent.prototype={
+	redraw:function(){
+		if (this.type=="rect") {
+			var data=this.data.split(";");
+			this.oCanvas.beginPath();
+			this.oCanvas.fillStyle=data[4]
+			this.oCanvas.rect(data[0],data[1],data[2],data[3]);
+			this.oCanvas.fill();
+		}
+	},
+	add:function(mx,my){
+		if (this.oCanvas.isPointInPath(mx,my)) {
+			this.callback();
+		}
+	}
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas">您的浏览器out了</canvas>
+</body>
+</html>

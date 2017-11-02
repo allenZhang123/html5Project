@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasMatrixFlower</title>
+<style>
+#canvas{ background-color: #ccc; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+	var arr=[];
+	setInterval(function(){
+		oCanvas.clearRect(0,0,600,600);
+		//循环数组。
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i].radius<0) {
+				arr.splice(i,1);//若到圆点则删除
+				continue;//跳出此次循环，开始下次循环
+			}
+			arr[i].angle+=2;
+			arr[i].radius-=0.2;
+			arr[i].scales-=0.002;
+			//控制缩放大小，最小到0.2，
+			if (arr[i].scales<0.2) {
+				arr[i].scales=0.2;
+			}
+			oCanvas.save();
+			oCanvas.translate(300,300);
+			//canvas中的变化都是基于0,0圆点，所以画面平移要写在其它变化最前面
+			oCanvas.transform(1,10*Math.PI/180,10*Math.PI/180,1,0,0);
+			oCanvas.scale(arr[i].scales,arr[i].scales);
+			oCanvas.fillStyle=arr[i].color;
+			oCanvas.rotate(arr[i].angle*Math.PI/180);
+			oCanvas.fillRect(arr[i].radius,arr[i].radius,30,30);
+			oCanvas.restore();
+		}
+	},60);
+	
+	//每一分钟产生一个方框，
+	//设置角度，半径，缩放比例和随机颜色，并存入数组
+	setInterval(function(){
+		var rect={angle:0,radius:150,scales:1,color:"rgb("+parseInt(255*Math.random())+','+parseInt(255*Math.random())+','+parseInt(255*Math.random())+")"};
+		//随机颜色。通过Math.random()实现
+		arr.push(rect);
+	},1000);
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="600" height="600"></canvas>
+</body>
+</html>

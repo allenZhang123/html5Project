@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>u
+<meta charset="UTF-8">
+<title>canvasMatrixRect</title>
+<style>
+#canvas{ background-color: #ccc; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext("2d");
+	// oCanvas.translate(100,100);
+	oCanvas.rect(50,50,100,100);
+	oCanvas.fill();
+
+	var num=0;
+	oCan.onclick=function(ev){
+		var mx=ev.layerX;
+		var my=ev.layerY;
+		if (oCanvas.isPointInPath(mx,my)) {
+			setInterval(function(){
+				oCanvas.clearRect(-50,-50,600,600);
+				oCanvas.save();
+				num+=3;
+				oCanvas.beginPath();
+				oCanvas.translate(100,100);
+				oCanvas.rotate(num*Math.PI/180);
+				oCanvas.scale(Math.sin(num*Math.PI/180),Math.sin(num*Math.PI/180));
+				oCanvas.rect(-50,-50,100,100);
+				oCanvas.fill();
+				oCanvas.restore();
+			},100);
+		}
+	};
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="600" height="600"></canvas>
+</body>
+</html>

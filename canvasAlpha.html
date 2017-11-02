@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasAlpha</title>
+<style>
+#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+	oCanvas.fillRect(0,0,100,100);
+	var imgData=oCanvas.getImageData(0,0,100,100);
+	var newImgData=oCanvas.createImageData(imgData);
+	//将获取的像素长度值传给newImgData,但不会获取到其像素值
+	oCanvas.putImageData();
+	//创建像素
+	// var imgData=oCanvas.createImageData(100,100);
+	// for (var i = 0; i < imgData.height; i++) {
+	// 	for (var j = 0; j < imgData.width; j++) {
+	// 		imgData.data[i*(imgData.width*4)+j*4+0]=255;
+	// 		imgData.data[i*(imgData.width*4)+j*4+1]=0;
+	// 		imgData.data[i*(imgData.width*4)+j*4+2]=0;
+	// 		imgData.data[i*(imgData.width*4)+j*4+3]=255;
+	// 	}
+	// }
+	// oCanvas.putImageData(imgData,100,100);
+
+	// oCanvas.fillRect(0,0,100,100);
+	// //获取像素数据
+	// var imgData=oCanvas.getImageData(0,0,100,100);
+	// for (var i = 0; i < imgData.width*imgData.height; i++) {
+	// 	// imgData.data[i*4+0]=r;
+	// 	// imgData.data[i*4+1]=g;
+	// 	// imgData.data[i*4+2]=b;
+	// 	// imgData.data[i*4+3]=a;
+	// 	// 更改像素值
+	// 	imgData.data[i*4+0]=255;
+	// 	imgData.data[i*4+1]=0;
+	// 	imgData.data[i*4+2]=0;
+	// 	imgData.data[i*4+3]=255;
+	// }
+	// //将获取到的像素放置到画布上100,100位置，显示区域是50-100区域
+	// oCanvas.putImageData(imgData,100,100,50,50,100,100);
+	// oCanvas.putImageData(imgData,100,100);
+
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>		
+</body>
+</html>

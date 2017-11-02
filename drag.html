@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>dage</title>
+<style>
+#div1{ width: 200px;height: 200px;background-color: orange;/*position:absolute;*/ }	
+#div2{ width: 100px;height: 100px;background-color: pink;/*position:absolute;*/ }	
+</style>
+<script>
+window.onload=function(){
+	var oDiv1=document.getElementById("div1");
+	var oDiv2=document.getElementById("div2");
+	//拖拽区事件
+	oDiv2.ondragstart=function(ev){
+		//设置数据
+		ev.dataTransfer.setData("Text","后盾网");
+	};
+	oDiv2.ondrag=function(){
+
+	};
+	oDiv2.ondragend=function(){
+
+	};
+	//投放区事件
+	oDiv1.ondragenter=function(ev){
+
+		ev.preventDefault();//阻止默认事件
+	};
+	oDiv1.ondragover=function(ev){
+
+		ev.preventDefault();
+	};
+	oDiv1.ondragleave=function(ev){
+
+		ev.preventDefault();
+	};
+	oDiv1.ondrop=function(ev){
+		//获取数据
+		alert(ev.dataTransfer.getData("Text"));
+		ev.preventDefault();
+		oDiv1.appendChild(oDiv2);
+	};
+};
+</script>
+</head>
+<body>
+	<div id="div1"></div>
+	<div id="div2" draggable="true">拖拽</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="no"?>
+<!-- 声明xml文档 版本1.0  是不是独立文档？no 不是 -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- 引入文档，关于svg文件标准 -->
+<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<!-- svg图片，宽高100%，版本1.1 命名空间 -->
+<polygon points="220,100,300,210,170,250" style="fill:#ccc;stroke:#000;stroke-width:1"/>
+</svg>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasEventDrag</title>
+<style>
+	#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+	var arr=[];
+	//创建5个图像数据，并存入数组
+	for (var i = 0; i <5; i++) {
+		//随机颜色
+		var colorRand='rgb('+parseInt(Math.random()*255)+','+parseInt(Math.random()*255)+','+parseInt(Math.random()*255)+')';
+		var arrObj={
+			x:(i+1)*50,y:(i+1)*50,r:(i+1)*15,s:0,e:Math.PI*2,color:colorRand};
+		arr.push(arrObj);
+	}
+	//绘制5个图形
+	drawArc();
+	function drawArc(){
+		for (var i = 0; i < arr.length; i++) {
+			oCanvas.beginPath();
+			oCanvas.fillStyle=arr[i].color;
+			oCanvas.arc(arr[i].x,arr[i].y,arr[i].r,arr[i].s,arr[i].e);
+			oCanvas.fill();
+		}
+	};
+	//拖拽图形
+	oCan.onmousedown=function(ev){
+		var mx=ev.layerX;
+		var my=ev.layerY;
+		oCan.onmousemove=function(ev){
+			//清除屏幕，因为创建对象，构造函数立刻重新绘制所有圆，所以不会对其他圆造成影响
+			oCanvas.clearRect(0,0,600,600);
+			var mx=ev.layerX;
+			var my=ev.layerY;
+			for (var i = 0; i < arr.length; i++){
+				//创建对象
+				var event=new addEvent(oCanvas,"arc",arr[i].x+";"+arr[i].y+";"+arr[i].r+";"+arr[i].s+";"+arr[i].e+";"+arr[i].color,function(){
+					//回调函数为拖拽重绘
+						oCanvas.beginPath();
+						oCanvas.fillStyle=arr[i].color;
+						oCanvas.arc(mx,my,arr[i].r,arr[i].s,arr[i].e);
+						oCanvas.fill();
+						//更新事件重绘圆的圆点
+						arr[i].x=mx;
+						arr[i].y=my;
+				});
+				//调用事件方法，执行回调函数
+				event.eventWay(mx,my);
+			}	
+		};
+		oCan.onmouseup=function(){
+			oCan.onmousemove=null;
+			oCan.onmouseup=null;
+		};
+	};
+};
+//参数：oCanvas  type:"arc"或者"rect" data:绘图数据，字符串形式  callback:回调函数
+function addEvent(oCanvas,type,data,callback){
+	this.oCanvas=oCanvas;
+	this.type=type;
+	this.data=data;
+	this.callback=callback;
+
+	this.redraw(); 
+	//创建对象时，自动调用重绘函数
+};
+//给对象原型添加方法，Json形式
+addEvent.prototype={
+	redraw:function(){
+		if (this.type=="arc"){
+			this.oCanvas.beginPath();
+			//因为颜色中有逗号，所以不能用逗号来切割
+			var data=this.data.split(";");
+			this.oCanvas.fillStyle=data[5];
+			this.oCanvas.arc(data[0],data[1],data[2],data[3],data[4]);
+			this.oCanvas.fill();
+		}
+	},
+	eventWay:function(mx,my){
+		if (this.oCanvas.isPointInPath(mx,my)) {
+			this.callback();
+		}
+	}
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="600" height="600"></canvas>
+</body>
+</html>

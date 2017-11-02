@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>quadraticCurve</title>
+<style>
+	#canvas{ background-color: #ccc; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext("2d");
+	oCan.onmousedown=function(ev){
+		//鼠标按下获取开始点
+		var startX=ev.layerX;
+		var startY=ev.layerY;
+		oCan.onmouseup=function(ev){
+			//鼠标抬起获取结束点
+			var endX=ev.layerX;
+			var endY=ev.layerY;
+			oCan.onmousemove=function(ev){
+				//鼠标移动获取控制点
+				var conX=ev.layerX;
+				var conY=ev.layerY;
+				oCanvas.clearRect(0,0,500,500);
+				//清除画布，指定画布大小
+				oCanvas.beginPath();
+				oCanvas.moveTo(startX,startY);
+				oCanvas.quadraticCurveTo(conX,conY,endX,endY);
+				oCanvas.stroke();
+				//再次点击画布，直线不再变化
+				oCan.onmousedown=function(ev){
+					var endConX=ev.layerX;
+					var endConY=ev.layerY;
+					oCanvas.clearRect(0,0,500,500);
+					oCanvas.moveTo(startX,startY);
+					oCanvas.quadraticCurveTo(endConX,endConY,endX,endY);
+					oCanvas.stroke();
+					//清除画图点击
+					oCan.onmousedown=null;
+					oCan.onmouseup=null;
+					oCan.onmousemove=null;
+					this.onmousedown=null;
+				};
+			};
+		};
+	};
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasImageStars</title>
+<style>
+#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+	var timer=null;
+	var angle=0;
+	// clearInterval(timer);
+	timer=setInterval(function(){
+		angle++;
+		oCanvas.clearRect(-200,-200,500,500);
+		oCanvas.save();
+		oCanvas.beginPath();
+		oCanvas.translate(200,200);
+		oCanvas.scale(Math.sin(angle*Math.PI/180),Math.sin(angle*Math.PI/180));//缩放比例在0到1之间变化
+		oCanvas.rotate(angle*Math.PI/180);
+		oCanvas.globalAlpha=Math.abs(Math.sin(angle*Math.PI/180));//透明度0到1之间的正数
+		drawStar(0,0,40,100,5,"fill","orange");
+		oCanvas.restore();
+	},30);
+	//多角形绘制函数：x,y中心坐标，radius半径，num角数，drawType绘制还是填充, color颜色
+	function drawStar(x,y,radius1,radius2,num,drawType,color){
+		var angle=360/(num*2);
+		//每一个正num角形都有num*2个角，将这些角依次连接起来
+		var arr=[];
+		//根据坐标系，确定每一个点的坐标
+		for (var i = 0; i < num*2; i++) {
+			var starObj={};
+			if (i%2==0) {
+				starObj.x=x+radius1*Math.cos(i*angle*Math.PI/180);
+				starObj.y=y+radius1*Math.sin(i*angle*Math.PI/180);
+			}
+			else{
+				starObj.x=x+radius2*Math.cos(i*angle*Math.PI/180);
+				starObj.y=y+radius2*Math.sin(i*angle*Math.PI/180);
+			}
+			//将这些角存入数组
+			arr.push(starObj);
+		}
+		oCanvas.beginPath();
+		oCanvas.fillStyle=color;
+		oCanvas.strokeStyle=color;
+		oCanvas.moveTo(arr[0].x,arr[0].y);
+		//循环每一个角，将每个坐标连起来
+		for (var i = 1; i < arr.length; i++) {
+			oCanvas.lineTo(arr[i].x,arr[i].y);
+		}
+		oCanvas.closePath();
+		if (drawType=="fill") {
+				oCanvas.fill();
+			}
+		else if(drawType=="stroke"){
+			oCanvas.stroke();
+		}
+	};
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasImageWall</title>
+<style>
+#canvas{ background-color: #eee; }
+</style>
+<script>
+/*vx+=(targetX-sprite.x)*spring;//sprite为弹性系数	
+vy+=(targetY-sprite.y)*spring;
+sprite.x+=(vx*=friction);//friction为摩擦力
+sprite.y+=(vy*=friction);*/
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext('2d');
+	var oImg=document.getElementById("img");
+	var vx=0;//x轴速度
+	var vy=0;//y轴速度
+	var targetX=100;//目标位置
+	var targetY=200;
+	var startX=100;//初始位置
+	var startY=-100;
+	var changeX=startX;//改变量
+	var changeY=startY;
+	var spring=0.8;//弹性系数
+	var friction=0.6;//摩擦力
+	setInterval(function(){
+		oCanvas.clearRect(0,0,500,500);
+			vx+=(targetX-changeX)*spring;
+			vy+=(targetY-changeY)*spring;
+			changeX+=(vx*=friction);
+			//friction为摩擦力
+			changeY+=(vy*=friction);
+			oCanvas.beginPath();
+			oCanvas.lineWidth=5;
+			oCanvas.moveTo(startX,startY);
+			oCanvas.lineTo(changeX,changeY);
+			oCanvas.stroke();
+			oCanvas.drawImage(oImg,changeX-90,changeY);
+	},60);
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+<img src="images/canvasImage/1.jpg" alt="" hidden id="img">
+</body>
+</html>

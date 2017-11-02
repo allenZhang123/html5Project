@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasDemo</title>
+<style>
+	canvas{
+		background-color: #ccc;
+	}
+</style>
+<script>
+window.onload=function(){
+	//创建画布
+	var oCan=document.getElementById("canvas");
+	var oConvas=oCan.getContext("2d");
+
+	//创建线性渐变
+	var colorCan=oConvas.createLinearGradient(0,0,100,0);
+	// 参数：阴影渐变坐标，从0,0到100,0
+	// 由0到1的渐变
+	colorCan.addColorStop(0,"red");
+	colorCan.addColorStop(0.5,"blue");
+	colorCan.addColorStop(1,"green");
+
+	// 创建放射性渐变
+	var colorCan=oConvas.createRadialGradient(50,50,10,50,50,50);//参数：第一个圆坐标50,50，半径10。第二个园坐标50,50，半径50；
+	colorCan.addColorStop(0,"red");
+	colorCan.addColorStop(0.5,"blue");
+	colorCan.addColorStop(1,"yellow");
+
+	//将图片引入到画布
+	var oImg=document.getElementById("img1");
+	var imgObj=oConvas.createPattern(oImg,"repeat");//参数：图片对象，平铺方式：repeat repeat-x repeat-y
+	
+	oConvas.shadowColor="rgb(11,25,9)"
+	//默认阴影颜色
+	oConvas.shadowOffsetX=3;
+	oConvas.shadowOffsetY=3;//设置阴影偏移量
+	oConvas.fillStyle=imgObj;
+	//填充方式。获得渐变属性
+	oConvas.strokeStyle="green";//边框颜色
+	oConvas.shadowBlur=5;//设置阴影模糊级别
+	oConvas.fillRect(0,0,100,100);//填充矩形
+	// oConvas.strokeRect(100,100,100,100);//边框矩形
+};	
+</script>
+</head>
+<body>
+<canvas width="400" height="400" id="canvas">
+	
+</canvas>	
+<img src="images/videoDemo/1.jpg" alt="" width="100" height="100" id="img1">
+</body>
+</html>

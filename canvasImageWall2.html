@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasImageWall</title>
+<style>
+#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext('2d');
+	var oImg=document.getElementById("img");
+	
+	var iStart=0;
+	var iTarget=200;
+	var iSpeed=0;
+	var iSpring=0.6;
+	var iChange=iStart;
+	var timer=null;
+	setInterval(function(){
+		oCanvas.clearRect(0,0,500,500);
+		iSpeed+=(iTarget-iChange)*iSpring;
+		iSpeed*=0.8;
+		iChange+=iSpeed;
+		if (Math.abs(iSpeed)<=1&&Math.abs(iTarget-iChange)<=1) {
+			clearInterval(timer);
+			iChange=iTarget;
+		}
+		oCanvas.beginPath();
+		oCanvas.lineWidth=4;
+		oCanvas.moveTo(100,iStart);
+		oCanvas.lineTo(100,iChange);
+		oCanvas.stroke();
+		oCanvas.drawImage(oImg,10,iChange);
+	},60);
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+<img src="images/canvasImage/1.jpg" alt="" hidden id="img">
+</body>
+</html>

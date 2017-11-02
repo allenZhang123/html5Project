@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasImage</title>
+<style>
+	#canvas{ background-color: #eee; }
+	#canvas1{ background-color: #eee; }
+	#img{ display: none; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCan1=document.getElementById("canvas1");
+	var oCanvas=oCan.getContext('2d');
+	var oCanvas1=oCan1.getContext('2d');
+	var oImg=document.getElementById('img');
+	// oCanvas.drawImage(oImg,0,0,20,20,0,0,180,224);
+	var oVideo=document.getElementById('video');
+	oCan.onclick=function(){
+		oVideo.play();
+		oVideo.addEventListener('play',function(){
+			setInterval(function(){
+				oCanvas.drawImage(oVideo,0,0);
+				oCanvas1.drawImage(oCan,0,0);
+				//在第二个画布上绘制第一个画布
+			},20);
+		});
+	};
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+<canvas id="canvas1" width="500" height="500"></canvas>	
+<img src="images/canvasImage/1.jpg" alt="" id="img">
+<video src="video/canvasImage/iceage4.mp4" controls="controls" hidden id="video"></video>
+</body>
+</html>

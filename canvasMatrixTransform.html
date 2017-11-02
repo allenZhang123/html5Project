@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>matrixTransform</title>
+<style>
+	#canvas{ background-color: #ccc; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext("2d");
+	// oCanvas.strokeRect(0,0,200,200);//不受变换影响
+	// oCanvas.save();//保存绘图状态
+	// oCanvas.scale(0.5,0.5);//放在fillRect之前
+	// //x轴缩放比例，y轴缩放比例
+	// oCanvas.fillRect(100,100,100,100);
+	// oCanvas.restore();
+	// //恢复绘图状态，后边绘图将不会受影响
+	// oCanvas.arc(250,250,100,0,2*Math.PI);
+	// oCanvas.fill();
+
+	//位移
+	// var num=0;
+	// setInterval(function(){
+	// 	oCanvas.clearRect(0,0,500,500);
+	// 	num+=2;//变形记忆，速度值不断累加，2,4,6,12
+	// 	oCanvas.save();
+	// 	oCanvas.translate(num,0);
+	// 	oCanvas.fillRect(0,0,100,100);
+	// 	oCanvas.restore();
+	// },50);
+
+	//清除画布的问题
+	// oCanvas.translate(100,100)
+	// oCanvas.fillRect(-50,-50,100,100);
+	// oCanvas.clearRect(0,0,500,500);
+
+	//旋转
+	var num=0
+	setInterval(function(){
+		oCanvas.save();
+		oCanvas.clearRect(0,0,500,500);
+		num+=2;
+		//将画布平移，保证平移时，图形一直在画布内
+		oCanvas.translate(200,200);
+		oCanvas.rotate(num*Math.PI/180);
+		//以画布0,0点为基点旋转
+		oCanvas.strokeRect(50,50,100,100);
+		oCanvas.restore();
+	},100);
+
+	//transform变换矩阵
+	// oCanvas.translate(100,100);
+	// oCanvas.transform(1,10*Math.PI/180,10*Math.PI/180,1,0,0);
+	// oCanvas.strokeRect(0,0,100,100);
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>
+</body>
+</html>

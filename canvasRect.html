@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasRect</title>
+<style>
+	#canvas{ background-color: #ccc; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	var oCanvas=oCan.getContext("2d");
+	// drawRect(0,0,100,100);
+	// drawCircle(200,200,100);
+
+	oCanvas.beginPath();
+	oCanvas.lineWidth="20";
+	oCanvas.lineCap="round";
+	oCanvas.lineLimit=5;
+	oCanvas.moveTo(100,100);
+	oCanvas.lineTo(200,200);
+	oCanvas.lineTo(300,200);
+	// oCanvas.lineJoin="round";
+	oCanvas.stroke();
+
+	//圆形函数
+	function drawCircle(x,y,r){
+		//i 角度 需要转化成弧度
+		//弧度：一弧度=周长等于半径的长度
+		//一个圆有2*pi个弧度
+		//2*pi/360  每一度等于2*pi/360=pi/180个弧度
+		oCanvas.beginPath();
+		oCanvas.moveTo(x+r*Math.cos(0),y+r*Math.sin(0));
+		for (var i = 0; i < 360; i++) {
+			oCanvas.lineTo(x+r*Math.cos(i*Math.PI/180),y+r*Math.sin(i*Math.PI/180));
+			oCanvas.stroke();
+		}
+		oCanvas.closePath();
+	};
+
+	//矩形函数
+	function drawRect(x,y,w,h){
+		oCanvas.beginPath();
+		oCanvas.moveTo(x,y);
+		oCanvas.lineTo(x+w,y);
+		oCanvas.lineTo(x+w,y+h);
+		oCanvas.lineTo(x,y+h);
+		oCanvas.closePath();
+		oCanvas.strokeStyle="orange";
+		oCanvas.stroke();
+	};
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500px" height="500px">
+	请升级浏览器
+</canvas>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasAlphaAddColor</title>
+<style>
+#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+	var oImg=document.getElementById("img");
+	//添加图片
+	oCanvas.drawImage(oImg,0,0,200,240);
+	//获取图片像素数据
+	var imgData=oCanvas.getImageData(0,0,200,240);
+	//添加杂色
+	addColor(imgData,10);
+	oCanvas.putImageData(imgData,200,240);
+	//封装函数
+	function addColor(imgData,num){
+		//获取随机像素点
+		var newArr=randomNumber(imgData.width*imgData.height,num);
+		//给每个像素点添加随机色
+		for (var i = 0; i < newArr.length; i++) {
+			//随机像素点=(自身颜色+随机颜色)/2；看起来更柔和
+			imgData.data[4*newArr[i]+0]=(parseInt(255*Math.random())+imgData.data[4*newArr[i]+0])/2;
+			imgData.data[4*newArr[i]+1]=(parseInt(255*Math.random())+imgData.data[4*newArr[i]+1])/2;
+			imgData.data[4*newArr[i]+2]=(parseInt(255*Math.random())+imgData.data[4*newArr[i]+2])/2;
+			imgData.data[4*newArr[i]+3]=255;
+		}
+	//取随机数 sum随机数总数，num总共要去多少个随机数
+		function randomNumber(sum,num){
+			var arr=[];
+			for (var i = 0; i <sum; i++) {
+				arr.push(i);
+			}
+			var newArrRand=[];
+			for (var i = 0; i <sum/num; i++) {
+				//获取随机下标，随机数向下取整
+				var index=Math.floor(arr.length*Math.random());
+				newArrRand.push(arr[index]);
+				arr.splice(index,1);
+				//立即删除已取出的数值，splice会返回删除的数值
+			}
+			return newArrRand;
+		};
+	};
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+<img src="images/canvasAlpha/1.jpg" hidden="hidden" id="img">
+</body>
+</html>

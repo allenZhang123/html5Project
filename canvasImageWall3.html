@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasImageWall3</title>
+<style>
+body,html{ margin:0;padding:0;width:100%; height: 100%;overflow: hidden;}
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById("canvas");
+	//设置画布宽高等于屏幕宽高
+	//不可用style 设置canvas宽高
+	oCan.width=document.documentElement.clientWidth;
+	oCan.height=document.documentElement.clientHeight;
+	oCan.style.background="#000";
+	var aImg=document.getElementsByTagName('img');
+	var oVideo=document.getElementById('video');
+	var oCanvas=oCan.getContext('2d');
+	var spring=0.8;//弹性系数
+	var friction=0.6;//摩擦力
+	var timer=null;
+	//添加文字，要在点击之后，保证点击路径在按钮上而不是文字上，并且不能放在按钮绘制之前，因为会被按钮覆盖
+	// oCanvas.beginPath();
+	// oCanvas.font="15px 微软雅黑"
+	// oCanvas.filltStyle="#000";
+	// oCanvas.textAlign="center";
+	// oCanvas.textBaseline="center";
+	// oCanvas.fillText("play",25,25);
+	// ????????????????????????怎么设置文字????????????????
+	
+	//绘制play按钮
+	oCanvas.beginPath();
+	oCanvas.rect(0,0,50,50),
+	oCanvas.fillStyle="orange";
+	oCanvas.closePath();
+	oCanvas.fill();
+	//点击按钮，开始运动
+	oCan.onclick=function(ev){
+		var mx=ev.layerX;
+		var my=ev.layerY;
+		//判断是否在路径中
+		if (oCanvas.isPointInPath(mx,my)) {
+			//关闭视频播放
+			oVideo.pause();
+			//关闭视频播放定时器
+			clearInterval(timer);
+			//清除画布
+			oCanvas.clearRect(0,0,oCan.width,oCan.height);
+			//接收create返回的数组
+			var arr=create();
+			//循环数组，让每一副画运动起来
+			for (var i = 0; i < arr.length; i++) {
+				moves(arr[i]);
+			}
+		}
+	};
+	//画面运动
+	function moves(obj){
+		//关闭每一个对象的定时器
+		clearInterval(obj.timer);
+		obj.timer=setInterval(function(){
+			if (Math.abs(obj.vx)<=1&&Math.abs(obj.vy)<=1&&Math.abs(obj.changeX-obj.targetX)<=1&&Math.abs(obj.changeY-obj.targetY)<=1) {
+				//定时器关闭条件：速度绝对值小于一，距离差绝对值小于一
+				clearInterval(obj.timer);
+			}
+			else{
+				//每次运行清除画布，因有很多图像运动，只清除每个图像运动范围内的画布
+				oCanvas.clearRect(obj.changeX-obj.width/2,obj.changeY,obj.width,obj.height+obj.changeY);
+				//弹性运动
+				obj.vx+=(obj.targetX-obj.changeX)*spring;
+				obj.vy+=(obj.targetY-obj.changeY)*spring;
+				obj.changeX+=(obj.vx*=friction);
+				obj.changeY+=(obj.vy*=friction);
+				oCanvas.beginPath();
+				oCanvas.lineWidth=5;
+				oCanvas.strokeStyle="#fff";
+				oCanvas.moveTo(obj.startX,obj.startY);
+				oCanvas.lineTo(obj.changeX,obj.changeY);
+				oCanvas.stroke();
+				//当对象是音频：
+				if (obj.src==oVideo) {
+					//视频播放
+					oVideo.play();
+					oVideo.addEventListener("play",function(){
+						//关闭视频定时器
+						clearInterval(timer);
+						timer=setInterval(function(){
+							oCanvas.drawImage(obj.src,obj.changeX-obj.width/2,obj.changeY,obj.width,obj.height);
+						},20);
+					});
+				}
+				//当对象是图片
+				else
+				{
+					oCanvas.drawImage(obj.src,obj.changeX-obj.width/2,obj.changeY,obj.width,obj.height);
+				}
+				//创建按钮
+				oCanvas.beginPath();
+				oCanvas.rect(0,0,50,50),
+				oCanvas.fillStyle="orange";
+				oCanvas.fill();
+			}
+		},60);
+	};
+	//创建对象内容
+	function create(){
+		// 每次调用创建函数都创建一个空数组
+		var imgArr=[];
+		for (var i = 0; i <5; i++) {
+			var srcObj;
+			//前四个为图片
+			if (i<4) {
+				srcObj=aImg[i];
+			}
+			//最后一个为视频
+			else{
+				srcObj=oVideo;
+			}
+			//初始x位置定位随机数
+			var startx=200+260*i+40*Math.random();
+			//对象内容，JSON形式
+			var imgObj={src:srcObj,vx:0,vy:0,width:260,height:140,startX:startx,startY:-100,targetX:startx,targetY:300+100*Math.random(),changeX:startx,changeY:-100};
+			//创建成功就添加到数组
+			imgArr.push(imgObj);
+		}
+		//将数组放回，以备调用
+		return imgArr;
+	};
+};
+</script>
+</head>
+<body>
+<canvas id="canvas"></canvas>	
+<img src="images/canvasImageWall/1.jpg" hidden>
+<img src="images/canvasImageWall/2.jpg" hidden>
+<img src="images/canvasImageWall/3.jpg" hidden>
+<img src="images/canvasImageWall/4.jpg" hidden>
+<video src="images/canvasImageWall/iceage4.mp4"  id="video" hidden></video> 
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasEventClick</title>
+<style>
+	#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+	//第一个图形
+	oCanvas.beginPath();
+	oCanvas.arc(100,100,50,0,Math.PI*2);
+	oCanvas.fill();
+	//第二个图形
+	oCanvas.beginPath();
+	oCanvas.arc(200,200,50,0,2*Math.PI);
+	oCanvas.fill();
+	//原理：每创建一个对象，都将对应图形重新绘制，保证在点击路径中
+	oCan.onclick=function(ev){
+		mx=ev.layerX;
+		my=ev.layerY;
+		//创建第一个点击对象
+		var event1=new addEvent(oCanvas,"arc","100,100,50,0,"+Math.PI*2,function(){
+			alert(1);
+		});
+		event1.eventWay(mx,my);
+		// 创建第二个点击对象
+		var event2=new addEvent(oCanvas,"arc","200,200,50,0,"+Math.PI*2,function(){
+			alert(2);
+		});
+		event2.eventWay(mx,my);
+	};
+};
+//参数：oCanvas  type:"arc"或者"rect" data:绘图数据，字符串形式  callback:回调函数
+function addEvent(oCanvas,type,data,callback){
+	this.oCanvas=oCanvas;
+	this.type=type;
+	this.data=data;
+	this.callback=callback;
+
+	this.redraw(); 
+	//创建对象时，自动调用重绘函数
+};
+//给对象原型添加方法，Json形式
+addEvent.prototype={
+	redraw:function(){
+		if (this.type=="arc"){
+			this.oCanvas.beginPath();
+			var data=this.data.split(",");
+			this.oCanvas.arc(data[0],data[1],data[2],data[3],data[4]);
+			this.oCanvas.fill();
+		}
+	},
+	eventWay:function(mx,my){
+		if (this.oCanvas.isPointInPath(mx,my)) {
+			this.callback();
+		}
+	}
+};
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>drag2</title>
+<style>
+#box{
+	width: 200px;height: 200px;border: 1px solid red;
+}
+#con{
+	width: 200px;height: 200px;border: 1px solid blue;list-style: none;padding:0;margin:0;
+}
+li{
+	width: 150px;height: 30px;margin:5px 0;background-color: #ccc;line-height:30px;text-align: center;list-style:none;
+}
+</style>
+<script>
+window.onload=function(){
+	var oBox=document.getElementById("box");
+	var oCon=document.getElementById("con");
+	var aLi=document.getElementsByTagName("li");
+	for (var i = 0; i < aLi.length; i++) {
+		aLi[i].draggable=true;
+		aLi[i].ondragstart=function(){
+			this.flag=true;//记得用this
+		};
+		aLi[i].ondragend=function(){
+			this.flag=false;
+		};
+	}
+	//投放区
+	drag(oBox)
+	//拖回
+	drag(oCon);
+
+function drag(obj){
+	obj.ondragenter=function(ev){
+		ev.preventDefault();
+	};
+	obj.ondragover=function(ev){
+		ev.preventDefault();
+	};
+	obj.ondragleave=function(ev){
+		ev.preventDefault();
+	};
+	obj.ondrop=function(ev){
+		for (var i = 0; i < aLi.length; i++) {
+			if (aLi[i].flag==true) {
+				obj.appendChild(aLi[i]);
+			}
+		}
+		ev.preventDefault();
+	};
+};
+};	
+</script>
+</head>
+<body>
+	<div id="box"></div>
+	<ul id="con">
+		<li>php</li>
+		<li>js</li>
+		<li>html5</li>
+		<li>css3</li>
+	</ul>
+</body>
+</html>

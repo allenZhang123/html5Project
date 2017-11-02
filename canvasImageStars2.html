@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>canvasImageStars</title>
+<style>
+#canvas{ background-color: #eee; }
+</style>
+<script>
+window.onload=function(){
+	var oCan=document.getElementById('canvas');
+	var oCanvas=oCan.getContext('2d');
+	var starArr=[];
+	//创建30个图形内容
+	for (var i = 0; i <30; i++) {
+		var starObj1={
+			radius1:20+10*Math.random(),radius2:8+7*Math.random(),x:30+(oCan.width-60)*Math.random(),y:30+(oCan.height-60)*Math.random(),num:Math.ceil(4+4*Math.random()),color:"rgb("+parseInt(255*Math.random())+","+parseInt(255*Math.random())+","+parseInt(255*Math.random())+")",angle:360*Math.random(),changeAngle:-5+10*Math.random(),drawType:parseInt(100*Math.random())%2==0?"fill":"stroke"
+		}
+		starArr.push(starObj1);
+	}
+	setInterval(function(){
+		oCanvas.clearRect(0,0,500,500);
+		for (var i = 0; i < starArr.length; i++) {
+			starArr[i].angle+=starArr[i].changeAngle;
+			oCanvas.save();
+			oCanvas.translate(starArr[i].x,starArr[i].y);
+			oCanvas.beginPath();
+			// oCanvas.clearRect(-starArr[i].radius1+2,-starArr[i].radius1+2,(starArr[i].radius1+2)*2,(starArr[i].radius1+2)*2);
+			oCanvas.scale(Math.sin(starArr[i].angle*Math.PI/180),Math.sin(starArr[i].angle*Math.PI/180));
+			//缩放比例在0到1之间变化
+			oCanvas.rotate(starArr[i].angle*Math.PI/180);
+			oCanvas.globalAlpha=Math.abs(Math.sin(starArr[i].angle*Math.PI/180));//透明度0到1之间的正数
+			drawStar(0,0,starArr[i].radius2,starArr[i].radius1,starArr[i].num,starArr[i].drawType,starArr[i].color);
+			oCanvas.restore();
+		}
+	},60);
+	//多角形绘制函数：x,y中心坐标，radius半径，num角数，drawType绘制还是填充
+	function drawStar(x,y,radius1,radius2,num,drawType,color){
+		var angle=360/(num*2);
+		var arr=[];
+		for (var i = 0; i < num*2; i++) {
+			var starObj={};
+			if (i%2==0) {
+				starObj.x=x+radius1*Math.cos(i*angle*Math.PI/180);
+				starObj.y=y+radius1*Math.sin(i*angle*Math.PI/180);
+			}
+			else{
+				starObj.x=x+radius2*Math.cos(i*angle*Math.PI/180);
+				starObj.y=y+radius2*Math.sin(i*angle*Math.PI/180);
+			}
+			arr.push(starObj);
+		}
+		oCanvas.beginPath();
+		oCanvas.fillStyle=color;
+		oCanvas.lineWidth=5;
+		oCanvas.strokeStyle=color;
+		oCanvas.moveTo(arr[0].x,arr[0].y);
+		for (var i = 1; i < arr.length; i++) {
+			oCanvas.lineTo(arr[i].x,arr[i].y);
+		}
+		oCanvas.closePath();
+		if (drawType=="fill") {
+				oCanvas.fill();
+			}
+		else if(drawType=="stroke"){
+			oCanvas.stroke();
+		}
+	};
+};	
+</script>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>	
+</body>
+</html>

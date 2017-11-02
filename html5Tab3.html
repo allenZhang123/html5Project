@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>html5Tab3</title>
+<style>
+	#div1{
+		width: 100px;height: 100px;background-color: orange;
+	}
+</style>
+<script>
+window.onload=function(){
+	var oDiv=document.getElementById("div1");
+	// oDiv.oncontextmenu=function(){
+	// 	return false;
+	// };
+	// var oInput=document.getElementsByTagName("input")[0];
+	// oInput.onchange=function(){
+	// 	alert(oInput.value);
+	// };
+};
+</script>
+</head>
+<body>
+<div hidden="true">隐藏</div>
+<div contenteditable="true">
+	可编辑吗
+</div>
+
+<div id="div1" contextmenu="one"></div>
+<menu id="one" type="context">
+	<menuitem label="我是第一个菜单" icon="images/1.png" onclick="(function(){
+		location.href='http://baidu.com'
+	})()"></menuitem>
+</menu>
+
+<!-- 学生姓名：<input type="text" list="li">
+	<datalist id="li">
+		<option >张三</option>
+		<option >张四</option>
+		<option >张五</option>
+		<option >张六</option>
+	</datalist> -->
+</body>
+</html>

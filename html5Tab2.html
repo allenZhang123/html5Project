@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>html5Demo2</title>
+<script>
+window.onload=function(){
+	// var oProgress=document.getElementsByTagName("progress")[0];
+	// var oFig=document.getElementsByTagName("figure")[0];
+	// oProgress.timer=setInterval(function(){
+	// 	if (oProgress.value==10) {
+	// 		clearInterval(oProgress.timer);
+	// 		document.body.removeChild(oProgress);
+	// 		var oSpan=document.createElement("span");
+	// 		oSpan.innerHTML="加载完成";
+	// 		document.body.appendChild(oSpan);
+	// 	} else 
+	// 	{
+	// 	oProgress.value+=1;
+	// 	}
+	// },500);
+
+	// var aMeter=document.getElementsByTagName("meter")[0];
+	// aMeter.onclick=function(){
+	// 	aMeter.value+=1;
+	// }
+
+	// var oTime1=document.getElementsByTagName('time')[0];
+	var oTime2=document.getElementsByTagName('time')[1];
+	var oDate=new Date();
+	// if (oDate.getFullYear()==oTime1.innerHTML) {
+	// 	alert("生日快乐");
+	// }
+
+	var Time=oDate.getFullYear()+"."+(oDate.getMonth()+1)+"."+oDate.getDate();
+
+	if (Time==oTime2.getAttribute("datetime")) {
+		alert("检测到更新");
+	}
+	// alert(oTime2.datetime);
+	// if (Time==oTime2.value) {
+	// 	alert("检测到更新");
+	// }
+	else{
+		alert("没有更新");
+	}
+};
+</script>
+</head>
+<body>
+	<progress max="10" value="0" min="0"></progress><br>
+	我的生日是<time>2016</time>年<br>
+	我的网站又<time datetime="2016.5.9">更新</time>了
+	<meter max="10"min="0" value="5"></meter>
+	<figure>
+		<figcaption>
+			这是一组图片
+		</figcaption>
+		<img src="" alt="">
+	</figure>
+</body>
+</html>
